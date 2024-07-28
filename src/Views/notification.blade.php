@@ -1,0 +1,5 @@
+@if(!empty($alertMessage))
+    <div class="alert alert-danger" role="alert">
+        {{$alertMessage}}
+    </div>
+@endif
