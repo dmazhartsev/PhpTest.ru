@@ -7,5 +7,3 @@ use App\Router;
 $router = new Router();
 
 $router->runSite();
-
-echo 'Hello, World!';
