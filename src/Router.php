@@ -57,7 +57,7 @@ class Router
         }
     }
 
-    private function getClassName($controller, $action, string $controllerTemplate): string
+    private function getClassName(string $controller, string $action, string $controllerTemplate): string
     {
         $className = sprintf($controllerTemplate, $controller);
 
