@@ -9,8 +9,8 @@ use stdClass;
 
 class UserJWT
 {
-    private string $key = "secret_key";
-    private string $algo = "HS256";
+    private const KEY = "secret_key";
+    private const ALGO = "HS256";
     private static $instance;
 
     public static function getInstance(): UserJWT
@@ -22,15 +22,15 @@ class UserJWT
         return self::$instance;
     }
 
-    public function getToken($data): string
+    public function getToken(array $data): string
     {
-        return JWT::encode($data, $this->key, $this->algo);
+        return JWT::encode($data, self::KEY, self::ALGO);
     }
 
     public function verifyToken(string $token): bool
     {
         try {
-            JWT::decode($token, new Key($this->key, $this->algo));
+            JWT::decode($token, new Key(self::KEY, self::ALGO));
             return true;
         } catch (Exception $e) {
             return false;

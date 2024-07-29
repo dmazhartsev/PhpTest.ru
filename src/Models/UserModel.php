@@ -105,7 +105,7 @@ class UserModel extends BaseModel
         return true;
     }
 
-    public function changePassword(mixed $newPassword): bool
+    public function changePassword(string $newPassword): bool
     {
         $this->getPDO()->beginTransaction();
 

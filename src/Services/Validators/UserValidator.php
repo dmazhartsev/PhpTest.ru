@@ -2,9 +2,6 @@
 
 namespace App\Services\Validators;
 
-use App\System\Helpers\SessionHelper;
-use App\System\JWT\UserJWT;
-
 class UserValidator
 {
     private string $message = '';
@@ -99,30 +96,10 @@ class UserValidator
         return true;
     }
 
-    public function hasUser($user): bool
+    public function hasUser(?array $user): bool
     {
         if (empty($user)) {
             $this->message = "Пользователь не найден";
-            return false;
-        }
-
-        return true;
-    }
-
-    public function tokenVerify(string $token): bool
-    {
-        if (!UserJWT::getInstance()->verifyToken($token)) {
-            $this->message = "Токен недействителен";
-            return false;
-        }
-
-        return true;
-    }
-
-    public function validateAuthorisation(): bool
-    {
-        if (!SessionHelper::getInstance()->hasUserId()) {
-            $this->message = "Вы не авторизованы";
             return false;
         }
 
