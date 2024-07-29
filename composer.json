@@ -11,6 +11,7 @@
     "symfony/http-foundation": "^6.4",
     "jenssegers/blade": "^1.4",
     "firebase/php-jwt": "^6.10",
-    "phpmailer/phpmailer": "^6.9"
+    "phpmailer/phpmailer": "^6.9",
+    "symfony/yaml": "^6.4"
   }
 }
