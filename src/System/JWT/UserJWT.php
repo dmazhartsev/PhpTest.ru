@@ -2,6 +2,8 @@
 
 namespace App\System\JWT;
 
+use App\System\AppException\AppException;
+use App\System\AppException\AppExceptionCode;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -45,6 +47,7 @@ class UserJWT
             }
             return true;
         } catch (Exception $e) {
+            new AppException($e->getMessage(), AppExceptionCode::ERROR_TOKEN_WRITE);
             return false;
         }
     }
