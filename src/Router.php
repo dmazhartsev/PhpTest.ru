@@ -75,9 +75,12 @@ class Router
         return $className;
     }
 
-    private function middleware(...$middleware): void
+    private function middleware(string ...$middleware): void
     {
         foreach ($middleware as $item) {
+            if (!class_exists($item)) {
+                $this->redirect->to404();
+            }
             $middleware = new $item();
             $middleware->run($this->controllerString, $this->actionString, $this->request);
         }

@@ -5,13 +5,22 @@ namespace App\System\JWT;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use stdClass;
 
 class UserJWT
 {
     private const KEY = "secret_key";
     private const ALGO = "HS256";
     private static $instance;
+
+    private function __construct()
+    {
+        // приватный конструктор ограничивает реализацию getInstance ()
+    }
+
+    protected function __clone()
+    {
+        // ограничивает клонирование объекта
+    }
 
     public static function getInstance(): UserJWT
     {
@@ -22,18 +31,28 @@ class UserJWT
         return self::$instance;
     }
 
-    public function getToken(array $data): string
+    public function generateToken(array $data): string
     {
+        $data['exp'] = time() + 86400; //Токен действителен на сутки
         return JWT::encode($data, self::KEY, self::ALGO);
     }
 
     public function verifyToken(string $token): bool
     {
         try {
-            JWT::decode($token, new Key(self::KEY, self::ALGO));
+            if ($this->tokenExpired($token)) {
+                return false;
+            }
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
+
+    private function tokenExpired(string $token): bool
+    {
+        $data = JWT::decode($token, new Key(self::KEY, self::ALGO))->data;
+        return $data['exp'] < time();
+    }
+
 }

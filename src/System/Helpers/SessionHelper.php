@@ -7,14 +7,18 @@ class SessionHelper
 
     private static $instance;
 
-    public function __construct()
+    private function __construct()
     {
         if(session_status() !== PHP_SESSION_ACTIVE) session_start();
     }
 
+    protected function __clone()
+    {
+        // ограничивает клонирование объекта
+    }
+
     public static function getInstance(): SessionHelper
     {
-
         if (self::$instance === null) {
             self::$instance = new self();
         }

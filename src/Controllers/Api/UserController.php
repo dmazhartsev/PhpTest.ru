@@ -35,12 +35,12 @@ class UserController extends BaseController
             $this->model->authorisation($userFields['id']);
 
         if (!$this->isSuccess) {
-            $this->printJSON(array('message' => $this->validator->getMessage()));
+            $this->printJSON(['message' => $this->validator->getMessage()]);
             return;
         }
 
-        $this->printJSON(array('message' => 'Авторизация прошла успешно',
-            'token' => UserJWT::getInstance()->getToken(['id' => $userFields['id']])));
+        $this->printJSON(['message' => 'Авторизация прошла успешно',
+            'token' => UserJWT::getInstance()->generateToken(['id' => $userFields['id']])]);
     }
 
     public function registration(): void
@@ -49,11 +49,11 @@ class UserController extends BaseController
             $this->model->registration($this->request['email'], $this->request['password']);
 
         if (!$this->isSuccess) {
-            $this->printJSON(array('message' => $this->validator->getMessage()));
+            $this->printJSON(['message' => $this->validator->getMessage()]);
             return;
         }
 
-        $this->printJSON(array('message' => 'Регистрация прошла успешно'));
+        $this->printJSON(['message' => 'Регистрация прошла успешно']);
     }
 
     public function change_password(): void
@@ -62,11 +62,11 @@ class UserController extends BaseController
             $this->validator->changePassword($this->request, $this->model->getUser()) &&
             $this->model->changePassword($this->request['new_password'])
         ) {
-            $this->printJSON(array('message' => 'Пароль изменен'));
+            $this->printJSON(['message' => 'Пароль изменен']);
             return;
         }
 
-        $this->printJSON(array('message' => $this->validator->getMessage()));
+        $this->printJSON(['message' => $this->validator->getMessage()]);
     }
 
     public function edit(): void
@@ -74,10 +74,10 @@ class UserController extends BaseController
         $newData = (new UserDTO())->init($this->request);
 
         if ($this->model->edit($newData)) {
-            $this->printJSON(array('message' => 'Изменения сохранены'));
+            $this->printJSON(['message' => 'Изменения сохранены']);
             return;
         }
 
-        $this->printJSON(array('message' => 'Изменения не сохранились'));
+        $this->printJSON(['message' => 'Изменения не сохранились']);
     }
 }

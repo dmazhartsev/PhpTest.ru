@@ -5,7 +5,7 @@ namespace App\System\Middleware;
 use App\System\JWT\UserJWT;
 use Symfony\Component\HttpFoundation\Request;
 
-class AuthMiddleware implements Middleware
+class AuthMiddleware implements MiddlewareInterface
 {
     private string $controller;
     private string $action;
@@ -20,14 +20,19 @@ class AuthMiddleware implements Middleware
 
     public function run(): void
     {
-        if (($this->controller == 'User' && $this->action == 'authorisation') ||
-            ($this->controller == 'User' && $this->action == 'registration')) {
+        if (($this->controller === 'User') && (($this->action === 'authorisation') || ($this->action === 'registration'))) {
+            return;
         }
 
-        $tokenString = substr($this->request->headers->get('Authorization') ?? '', 7);
+        if ($this->request->headers->get('Authorization') === null) {
+            echo json_encode(['message' => 'Требуется авторизация'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            exit();
+        }
+
+        $tokenString = str_replace($this->request->headers->get('Authorization') ?? '', '', 'Bearer');
 
         if (!UserJWT::getInstance()->verifyToken($tokenString)) {
-            echo json_encode(array('message' => 'Необходима авторизация'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            echo json_encode(['message' => 'Токен недействителен'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             exit();
         }
     }

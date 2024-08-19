@@ -95,7 +95,7 @@ class UserModel extends BaseModel
                     ->updateWithNotNullParams('users', $parameters, ['id' => SessionHelper::getInstance()->getUserId()]);
             }
 
-        } catch (Exception $exception) {
+        } catch (Exception $_) {
             $this->getPDO()->rollBack();
             return false;
         }

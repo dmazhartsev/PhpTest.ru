@@ -1,0 +1,6 @@
+smtp:
+  Host: 'smtp.mail.ru'
+  Port: 465
+  Username: 'den-nety@mail.ru'
+  Password: '1EFf66hBaqVmnfHE0PHQ'
+  Encryption: ssl
