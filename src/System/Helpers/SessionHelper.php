@@ -26,6 +26,11 @@ class SessionHelper
         return self::$instance;
     }
 
+    public function isActive(): bool
+    {
+        return session_status() === PHP_SESSION_ACTIVE;
+    }
+
     public function set(string $key, $value): void
     {
         $_SESSION[$key] = $value;

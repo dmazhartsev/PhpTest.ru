@@ -4,6 +4,7 @@ namespace App\System\JWT;
 
 use App\System\AppException\AppException;
 use App\System\AppException\AppExceptionCode;
+use App\System\Helpers\SessionHelper;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -42,7 +43,12 @@ class UserJWT
     public function verifyToken(string $token): bool
     {
         try {
+            if (SessionHelper::getInstance()->isActive() === false) {
+                new AppException('Session is not active', AppExceptionCode::ERROR_HEADER_WRITE);
+                return false;
+            }
             if ($this->tokenExpired($token)) {
+                new AppException('Token expired', AppExceptionCode::ERROR_TOKEN_WRITE);
                 return false;
             }
             return true;
