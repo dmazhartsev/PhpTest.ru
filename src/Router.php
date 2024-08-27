@@ -81,8 +81,8 @@ class Router
             if (!class_exists($item)) {
                 $this->redirect->to404();
             }
-            $middleware = new $item();
-            $middleware->run($this->controllerString, $this->actionString, $this->request);
+            $middleware = new $item($this->controllerString, $this->actionString, $this->request);
+            $middleware->run();
         }
     }
 }
