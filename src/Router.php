@@ -4,6 +4,8 @@ namespace App;
 
 use App\Services\Redirect;
 use App\System\Helpers\SessionHelper;
+use App\System\Middleware\AuthMiddleware;
+use App\System\Middleware\ContentTypeMiddleware;
 use Symfony\Component\HttpFoundation\Request;
 
 class Router
@@ -12,8 +14,11 @@ class Router
     private const ACTION = 'a';
     private const CONTROLLER_TEMPLATE = 'App\\Controllers\\%sController';
     private const API_CONTROLLER_TEMPLATE = 'App\\Controllers\\Api\\%sController';
+
     private Redirect $redirect;
     private Request $request;
+    private string $controllerString;
+    private string $actionString;
 
     public function __construct()
     {
@@ -38,11 +43,13 @@ class Router
     {
         $data = $this->request->toArray();
 
-        $controller = strtok($data['method'], '.');
-        $action = strtok('.');
+        [$this->controllerString, $this->actionString] = explode('.', $data['method']);
 
-        $className = $this->getClassName($controller, $action, self::API_CONTROLLER_TEMPLATE);
+        $this->middleware(AuthMiddleware::class, ContentTypeMiddleware::class);
 
+        $className = $this->getClassName($this->controllerString, $this->actionString, self::API_CONTROLLER_TEMPLATE);
+
+        $action = $this->actionString;
         $controller = new $className();
         $controller->setRequestAndHeaders($data['params']);
         $controller->$action();
@@ -66,5 +73,16 @@ class Router
         }
 
         return $className;
+    }
+
+    private function middleware(string ...$middleware): void
+    {
+        foreach ($middleware as $item) {
+            if (!class_exists($item)) {
+                $this->redirect->to404();
+            }
+            $middleware = new $item($this->controllerString, $this->actionString, $this->request);
+            $middleware->run();
+        }
     }
 }

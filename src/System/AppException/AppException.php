@@ -8,6 +8,6 @@ class AppException extends Exception
 {
     public function __construct(string $message, AppExceptionCode $code)
     {
-        parent::__construct($message, $code);
+        parent::__construct($message, $code->value);
     }
 }

@@ -21,4 +21,9 @@ class BaseController
         $this->headers = getallheaders();
         $this->tokenString = substr($this->headers['Authorization'] ?? '', 7);
     }
+
+    protected function printJSON(array $data): void
+    {
+        echo json_encode($data,JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
 }

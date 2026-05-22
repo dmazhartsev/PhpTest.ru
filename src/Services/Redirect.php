@@ -52,11 +52,4 @@ class Redirect
         header('Location: /405', true, 405);
         exit;
     }
-
-    public function to($controller, $action)  : void
-    {
-        header('Location: /?c=' . $controller . '&a=' . $action);
-        exit;
-    }
-
 }
